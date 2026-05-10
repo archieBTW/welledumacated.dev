@@ -252,11 +252,8 @@ class _MySpacePageState extends State<MySpacePage> {
               Icons.computer,
               'https://github.com/archieBTW/fyrDE',
             ),
-            _buildFriend(
-              'bybl',
-              Icons.book,
-              'https://github.com/archieBTW/bybl',
-            ),
+            _buildFriend('archBTW.', Icons.music_note, 'https://archBTW.sh'),
+            _buildFriend('bybl', Icons.book, 'https://bybl.dev'),
             _buildFriend(
               'libretrac',
               Icons.favorite,
