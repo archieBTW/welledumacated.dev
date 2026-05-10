@@ -171,26 +171,26 @@ class _MySpacePageState extends State<MySpacePage> {
             letterSpacing: 8,
           ),
         ),
-        Container(
-          width: double.infinity,
-          color: const Color(0xFFBF00FF),
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Text(
-                  'Welcome to the official portal :: open source for the broken-hearted :: check out bybl and fyr!! ' *
-                      3,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        // Container(
+        //   width: double.infinity,
+        //   color: const Color(0xFFBF00FF),
+        //   padding: const EdgeInsets.symmetric(vertical: 5),
+        //   child: SingleChildScrollView(
+        //     scrollDirection: Axis.horizontal,
+        //     child: Row(
+        //       children: [
+        //         Text(
+        //           ' ' *
+        //               3,
+        //           style: const TextStyle(
+        //             color: Colors.white,
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -219,7 +219,7 @@ class _MySpacePageState extends State<MySpacePage> {
         _buildBoxTitle('Interests'),
         _buildBox(
           Text(
-            'General: Open Source, Privacy, Linux, Theology, Health, Gaming.\nMusic: archBTW., MF DOOM',
+            'General: Open Source, Linux, Theology, Health, Car, Music, Flutter.\nMusic: archBTW., MF DOOM',
             style: const TextStyle(fontSize: 12, color: Colors.white),
           ),
         ),
@@ -235,7 +235,7 @@ class _MySpacePageState extends State<MySpacePage> {
       children: [
         _buildSectionHeader('well edumacated\'s Blurbs'),
         const Text(
-          'About me: We are a small collective of developers making tools for the people. We believe in high-quality software that looks as edgy as we feel.',
+          'About me: I\'m archie and this is my pretend company where I make cool stuff.',
           style: TextStyle(fontSize: 14, color: Colors.white),
         ),
         const SizedBox(height: 20),
@@ -346,7 +346,9 @@ class _MySpacePageState extends State<MySpacePage> {
           Container(
             width: 60,
             height: 60,
-            decoration: BoxDecoration(border: Border.all(color: const Color(0xFFBF00FF))),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFBF00FF)),
+            ),
             child: Icon(icon, color: const Color(0xFFBF00FF)),
           ),
           const SizedBox(height: 5),
