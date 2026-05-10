@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wELl eDuMaCaTeD // mYsPaCe</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+    <canvas id="flame-canvas"></canvas>
+
+    <div id="app">
+        <header>
+            <h1>wELl eDuMaCaTeD</h1>
+            <div class="marquee">
+                <p>Welcome to the official portal of well edumacated :: open source for the broken-hearted :: new apps inside :: check out bybl and fyr!!</p>
+            </div>
+        </header>
+
+        <div class="layout">
+            <!-- Left Column -->
+            <aside class="profile-col">
+                <img src="/assets/logo.png" alt="Well Edumacated Logo" class="profile-pic">
+                
+                <h2>Contacting well edumacated</h2>
+                <div class="contact-box">
+                    <ul>
+                        <li><a href="#about">View About Page</a></li>
+                        <li><a href="#apps">Browse Our Apps</a></li>
+                        <li><a href="mailto:contact@welledumacated.org">Send Message</a></li>
+                        <li><a href="#">Add to Group</a></li>
+                    </ul>
+                </div>
+
+                <h2>well edumacated's Interests</h2>
+                <div class="contact-box">
+                    <p><strong>General:</strong> Open Source, Privacy, Linux, Theology, Health, Gaming.</p>
+                    <p><strong>Music:</strong> My Chemical Romance, Brand New, Dashboard Confessional.</p>
+                </div>
+
+                <h2>Mood: <span>Grateful</span></h2>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYycHpxcXpxcXpxcXpxcXpxcXpxcXpxcXpxcXpxcXpxcXpxcXpx/3o7TKMGpxrL6j6Xy0A/giphy.gif" alt="Mood" style="width: 50px;">
+            </aside>
+
+            <!-- Right Column -->
+            <main class="content-col">
+                <section class="blurbs">
+                    <h3>well edumacated's Blurbs</h3>
+                    <p><strong>About me:</strong></p>
+                    <p>We are a small collective of developers making tools for the people. We believe in high-quality software that looks as edgy as we feel. Welcome to our MySpace page. <em>Don't forget to check the top friends for our latest releases.</em></p>
+                    
+                    <p><strong>Who I'd like to meet:</strong></p>
+                    <p>Anyone who likes FOSS, MF DOOM, and crying to midwest emo. <3</p>
+                </section>
+
+                <section id="apps">
+                    <h3>well edumacated's Top Friends (Our Apps)</h3>
+                    <div class="top-friends">
+                        <!-- fyr -->
+                        <div class="friend">
+                            <a href="#fyr-details">
+                                <img src="https://img.freepik.com/free-vector/cyberpunk-computer-concept-illustration_114360-15570.jpg" alt="fyr">
+                                <p>fyr (Desktop)</p>
+                            </a>
+                        </div>
+                        <!-- bybl -->
+                        <div class="friend">
+                            <a href="#bybl-details">
+                                <img src="https://img.freepik.com/free-photo/bible-wooden-table_23-2148117765.jpg" alt="bybl">
+                                <p>bybl (Bible)</p>
+                            </a>
+                        </div>
+                        <!-- libretrac -->
+                        <div class="friend">
+                            <a href="#libre-details">
+                                <img src="https://img.freepik.com/free-vector/fitness-tracker-concept-illustration_114360-1065.jpg" alt="libretrac">
+                                <p>libretrac (Health)</p>
+                            </a>
+                        </div>
+                        <!-- trustfall -->
+                        <div class="friend">
+                            <a href="#trust-details">
+                                <img src="https://img.freepik.com/free-vector/pixel-art-game-concept_23-2148532454.jpg" alt="trustfall">
+                                <p>trustfall (Game)</p>
+                            </a>
+                        </div>
+                        <!-- the olive branch -->
+                        <div class="friend">
+                            <a href="#olive-details">
+                                <img src="https://img.freepik.com/free-photo/newspaper-table_23-2148117768.jpg" alt="the olive branch">
+                                <p>the olive branch (News)</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="music-player">
+                    <p><strong>Now Playing:</strong> "The Quiet Things That No One Ever Knows" - Brand New</p>
+                    <div class="player-controls">
+                        <button class="btn">PLAY</button>
+                        <button class="btn">STOP</button>
+                        <button class="btn">NEXT</button>
+                    </div>
+                </section>
+
+                <section id="fyr-details" class="app-details">
+                    <h3>fyr</h3>
+                    <p>A minimalist, powerful desktop environment built for the future. Experience computing like never before. <em>It's not just an OS, it's a lifestyle.</em></p>
+                </section>
+
+                <section id="bybl-details" class="app-details">
+                    <h3>bybl</h3>
+                    <p>The Word, everywhere. A modern bible app for the digital nomad. Search, highlight, and reflect on the go.</p>
+                </section>
+
+                <section id="libre-details" class="app-details">
+                    <h3>libretrac</h3>
+                    <p>Track your health without tracking your data. Privacy-first wellness monitoring. Heart rate, steps, and sleep, all kept local.</p>
+                </section>
+
+                <section id="about">
+                    <h3>About well edumacated</h3>
+                    <p>We are based in the cloud, but our hearts are in the early 2000s. We build software that respects your freedom and your aesthetics.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+    <script src="/src/cursor.js"></script>
+</body>
+</html>

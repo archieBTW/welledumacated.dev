@@ -1,0 +1,222 @@
+/* 2005 Emo MySpace Aesthetic */
+:root {
+  --primary-color: #bf00ff;
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --container-bg: rgba(17, 17, 17, 0.9);
+  --border-style: 2px dotted var(--primary-color);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  background-image: url('/assets/bg.png');
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: repeat;
+  color: var(--text-color);
+  font-family: "Courier New", Courier, monospace;
+  line-height: 1.4;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border: 2px solid #000;
+}
+
+#app {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: var(--container-bg);
+  border: var(--border-style);
+  box-shadow: 0 0 20px rgba(191, 0, 255, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-size: 3rem;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  text-shadow: 3px 3px 0 #000;
+  margin-bottom: 10px;
+}
+
+.marquee {
+  background: var(--primary-color);
+  color: #000;
+  padding: 5px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee p {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+/* MySpace Layout Grid */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
+
+/* Profile Column */
+.profile-col h2 {
+  background: var(--primary-color);
+  color: #000;
+  padding: 5px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.profile-pic {
+  width: 100%;
+  border: var(--border-style);
+  margin-bottom: 10px;
+}
+
+.contact-box {
+  border: 1px solid var(--primary-color);
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.contact-box ul {
+  list-style: none;
+}
+
+.contact-box li {
+  margin-bottom: 5px;
+}
+
+.contact-box a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.contact-box a:hover {
+  text-decoration: underline;
+  background: var(--primary-color);
+  color: #000;
+}
+
+/* Content Column */
+.content-col section {
+  margin-bottom: 30px;
+}
+
+.blurbs h3 {
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.top-friends {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.friend {
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.friend img {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #fff;
+  object-fit: cover;
+  margin-bottom: 5px;
+  transition: transform 0.2s;
+}
+
+.friend img:hover {
+  transform: scale(1.1);
+  border-color: var(--primary-color);
+}
+
+.music-player {
+  background: #222;
+  border: 1px solid #444;
+  padding: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.player-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn:hover {
+  background: var(--primary-color);
+  color: #000;
+}
+
+/* Apps Sections */
+.app-details {
+  border: 1px dashed var(--primary-color);
+  padding: 15px;
+  margin-top: 10px;
+}
+
+/* Flame Cursor Overlay */
+#flame-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
