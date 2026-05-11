@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -102,47 +103,105 @@ class _MySpacePageState extends State<MySpacePage> {
             // Main Content
             SingleChildScrollView(
               child: Center(
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 900),
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 40,
-                    horizontal: 20,
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF111111), // Dark grey container
-                    border: Border.all(
-                      color: const Color(0xFFBF00FF),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFBF00FF).withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isMobile = constraints.maxWidth < 700;
+                    return Container(
+                      constraints: const BoxConstraints(maxWidth: 900),
+                      margin: EdgeInsets.symmetric(
+                        vertical: isMobile ? 20 : 40,
+                        horizontal: isMobile ? 10 : 20,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header
-                      _buildHeader(),
-                      const SizedBox(height: 20),
-
-                      // Two Column Layout
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Left Column
-                          Expanded(flex: 1, child: _buildLeftColumn()),
-                          const SizedBox(width: 20),
-                          // Right Column
-                          Expanded(flex: 2, child: _buildRightColumn()),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111111), // Dark grey container
+                        border: Border.all(
+                          color: const Color(0xFFBF00FF),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFBF00FF).withOpacity(0.3),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Header
+                          _buildHeader(constraints.maxWidth),
+                          const SizedBox(height: 20),
+
+                          // Responsive Column Layout
+                          if (isMobile)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildProfilePic(isMobile),
+                                const SizedBox(height: 20),
+                                _buildAboutSection(),
+                                const SizedBox(height: 20),
+                                const MusicPlayerWidget(),
+                                const SizedBox(height: 20),
+                                _buildContactSection(),
+                                const SizedBox(height: 20),
+                                _buildInterestsSection(),
+                                const SizedBox(height: 20),
+                                _buildMoodSection(),
+                              ],
+                            )
+                          else
+                            Column(
+                              children: [
+                                // Top Row: Profile Pic and About Section
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: _buildProfilePic(isMobile),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      flex: 2,
+                                      child: _buildAboutSection(),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                // Second Row: Contact/Interests/Mood and Music Player
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        children: [
+                                          _buildContactSection(),
+                                          const SizedBox(height: 20),
+                                          _buildInterestsSection(),
+                                          const SizedBox(height: 20),
+                                          _buildMoodSection(),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    const Expanded(
+                                      flex: 2,
+                                      child: MusicPlayerWidget(),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          const SizedBox(height: 20),
+                          _buildAppsSection(isMobile),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -160,54 +219,46 @@ class _MySpacePageState extends State<MySpacePage> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(double width) {
+    double fontSize = width < 600 ? 40 : 64;
     return Column(
       children: [
-        Text(
-          'wELl eDuMaCaTeD',
-          style: GoogleFonts.vt323(
-            fontSize: 64,
-            color: const Color(0xFFBF00FF),
-            letterSpacing: 8,
+        Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '// well edumacated',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.vt323(
+                fontSize: fontSize,
+                color: const Color(0xFFBF00FF),
+                letterSpacing: width < 600 ? 4 : 8,
+              ),
+            ),
           ),
         ),
-        // Container(
-        //   width: double.infinity,
-        //   color: const Color(0xFFBF00FF),
-        //   padding: const EdgeInsets.symmetric(vertical: 5),
-        //   child: SingleChildScrollView(
-        //     scrollDirection: Axis.horizontal,
-        //     child: Row(
-        //       children: [
-        //         Text(
-        //           ' ' *
-        //               3,
-        //           style: const TextStyle(
-        //             color: Colors.white,
-        //             fontWeight: FontWeight.bold,
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
 
-  Widget _buildLeftColumn() {
+  Widget _buildProfilePic(bool isMobile) {
+    return Center(
+      child: Image.asset(
+        'assets/icons/132012541.png',
+        width: isMobile ? 200 : 300,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget _buildContactSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.asset(
-          'assets/icons/132012541.png',
-          width: 300,
-          fit: BoxFit.contain,
-        ),
-        const SizedBox(height: 20),
         _buildBoxTitle('Contacting well edumacated'),
         _buildBox(
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildLink('View About Page', 'https://github.com/archieBTW'),
               _buildLink('Browse Our Apps', 'https://github.com/archieBTW'),
@@ -215,37 +266,54 @@ class _MySpacePageState extends State<MySpacePage> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        _buildBoxTitle('Interests'),
-        _buildBox(
-          Text(
-            'General: Open Source, Linux, Theology, Health, Car, Music, Flutter.\nMusic: archBTW., MF DOOM',
-            style: const TextStyle(fontSize: 12, color: Colors.white),
-          ),
-        ),
-        const SizedBox(height: 20),
-        _buildBoxTitle('Mood: Grateful'),
       ],
     );
   }
 
-  Widget _buildRightColumn() {
+  Widget _buildInterestsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader('well edumacated\'s Blurbs'),
+        _buildBoxTitle('Interests'),
+        _buildBox(
+          const Text(
+            'General: Open Source, Linux, Flutter, Theology, Cars, Music. \n\nMusic: archBTW., MF DOOM',
+            style: TextStyle(fontSize: 12, color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMoodSection() {
+    return _buildBoxTitle('Mood: Manic');
+  }
+
+  Widget _buildAboutSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader('About well edumacated'),
         const Text(
-          'About me: I\'m archie and this is my pretend company where I make cool stuff.',
+          '\n\nI\'m archBTW and this is my pretend company where I make cool stuff with Flutter.\n\nI\'m also pretending it\'s my record label so here\'s my music too.\n\n//:);',
           style: TextStyle(fontSize: 14, color: Colors.white),
         ),
-        const SizedBox(height: 20),
-        _buildSectionHeader('Top Friends (Our Apps)'),
+      ],
+    );
+  }
+
+  Widget _buildAppsSection(bool isMobile) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader('Apps'),
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 3,
+          crossAxisCount: isMobile ? 3 : 6,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
+          childAspectRatio: 0.8,
           children: [
             _buildFriend(
               'fyr',
@@ -267,7 +335,7 @@ class _MySpacePageState extends State<MySpacePage> {
             _buildFriend(
               'olive branch',
               Icons.newspaper,
-              'https://github.com/archieBTW/theolivebranch',
+              'https://archbtw.site',
             ),
           ],
         ),
@@ -391,4 +459,230 @@ class ParticlePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class MusicPlayerWidget extends StatefulWidget {
+  const MusicPlayerWidget({super.key});
+
+  @override
+  State<MusicPlayerWidget> createState() => _MusicPlayerWidgetState();
+}
+
+class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+  int _currentTrackIndex = 0;
+
+  final List<Map<String, String>> _tracks = [
+    {'name': 'almost intelligent', 'path': 'music/ai.wav'},
+    {'name': 'crosstops', 'path': 'music/crosstops.wav'},
+    {'name': 'c u next tuesday', 'path': 'music/cunt.wav'},
+    {'name': 'drinking outta cups', 'path': 'music/cups.wav'},
+    {'name': 'elixer', 'path': 'music/elixir.wav'},
+    {'name': 'florence', 'path': 'music/florence.wav'},
+    {
+      'name': 'it seemed like a good idea at the time',
+      'path': 'music/it_seemed_like_a_good_idea_at_the_time.wav',
+    },
+    {'name': 'you call this mercy?', 'path': 'music/mercy.wav'},
+    {'name': 'midnight oil', 'path': 'music/midnight_oil.wav'},
+    {
+      'name': 'i may not be a smart man, but i know what love is',
+      'path': 'music/smart_man.wav',
+    },
+    {
+      'name': 'lets take it apart and put it back together',
+      'path': 'music/take_it_apart.wav',
+    },
+    {'name': 'and that\'s how it happened', 'path': 'music/thats_how.wav'},
+    {'name': 'third time\'s a charm', 'path': 'music/third_time.wav'},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() => _isPlaying = state == PlayerState.playing);
+      }
+    });
+    _audioPlayer.onDurationChanged.listen((newDuration) {
+      if (mounted) setState(() => _duration = newDuration);
+    });
+    _audioPlayer.onPositionChanged.listen((newPosition) {
+      if (mounted) setState(() => _position = newPosition);
+    });
+    _audioPlayer.onPlayerComplete.listen((event) {
+      _nextTrack();
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playPause() async {
+    if (_isPlaying) {
+      await _audioPlayer.pause();
+    } else {
+      await _audioPlayer.play(
+        AssetSource(_tracks[_currentTrackIndex]['path']!),
+      );
+    }
+  }
+
+  Future<void> _stop() async {
+    await _audioPlayer.stop();
+    setState(() => _position = Duration.zero);
+  }
+
+  Future<void> _nextTrack() async {
+    setState(() {
+      _currentTrackIndex = (_currentTrackIndex + 1) % _tracks.length;
+    });
+    await _audioPlayer.play(AssetSource(_tracks[_currentTrackIndex]['path']!));
+  }
+
+  Future<void> _prevTrack() async {
+    setState(() {
+      _currentTrackIndex =
+          (_currentTrackIndex - 1 + _tracks.length) % _tracks.length;
+    });
+    await _audioPlayer.play(AssetSource(_tracks[_currentTrackIndex]['path']!));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Title Bar
+        Container(
+          width: double.infinity,
+          color: const Color(0xFFBF00FF),
+          padding: const EdgeInsets.all(5),
+          child: const Text(
+            'Music Player',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        // Main Player Box
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFFBF00FF)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Now Playing
+              Text(
+                'NOW PLAYING: ${_tracks[_currentTrackIndex]['name']!}',
+                style: const TextStyle(
+                  color: Color(0xFFBF00FF),
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Progress Bar
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 4,
+                  ),
+                  trackHeight: 1,
+                  activeTrackColor: const Color(0xFFBF00FF),
+                  inactiveTrackColor: const Color(0xFFBF00FF).withOpacity(0.2),
+                  thumbColor: const Color(0xFFBF00FF),
+                ),
+                child: Slider(
+                  value: _position.inSeconds.toDouble(),
+                  max: _duration.inSeconds > 0
+                      ? _duration.inSeconds.toDouble()
+                      : 100.0,
+                  onChanged: (value) {
+                    _audioPlayer.seek(Duration(seconds: value.toInt()));
+                  },
+                ),
+              ),
+              // Controls
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildSimpleBtn('PREV', _prevTrack),
+                  const Text(' | ', style: TextStyle(color: Color(0xFFBF00FF))),
+                  _buildSimpleBtn(_isPlaying ? 'PAUSE' : 'PLAY', _playPause),
+                  const Text(' | ', style: TextStyle(color: Color(0xFFBF00FF))),
+                  _buildSimpleBtn('STOP', _stop),
+                  const Text(' | ', style: TextStyle(color: Color(0xFFBF00FF))),
+                  _buildSimpleBtn('NEXT', _nextTrack),
+                ],
+              ),
+              const SizedBox(height: 15),
+              // Playlist
+              const Text(
+                'PLAYLIST:',
+                style: TextStyle(
+                  color: Color(0xFFBF00FF),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Divider(color: Color(0xFFBF00FF)),
+              SizedBox(
+                height: 120,
+                child: ListView.builder(
+                  itemCount: _tracks.length,
+                  itemBuilder: (context, index) {
+                    final isCurrent = index == _currentTrackIndex;
+                    return InkWell(
+                      onTap: () {
+                        setState(() => _currentTrackIndex = index);
+                        _audioPlayer.play(AssetSource(_tracks[index]['path']!));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          '${index + 1}. ${_tracks[index]['name']!}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: isCurrent
+                                ? const Color(0xFFBF00FF)
+                                : Colors.white70,
+                            decoration: isCurrent
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSimpleBtn(String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Color(0xFFBF00FF),
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+    );
+  }
 }
