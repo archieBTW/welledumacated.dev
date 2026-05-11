@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'wELl eDuMaCaTeD // mYsPaCe',
+      title: 'well edumacated',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -105,12 +106,13 @@ class _MySpacePageState extends State<MySpacePage> {
               child: Center(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final isMobile = constraints.maxWidth < 700;
+                    final screenWidth = MediaQuery.of(context).size.width;
+                    final isMobile = screenWidth < 800;
                     return Container(
                       constraints: const BoxConstraints(maxWidth: 900),
                       margin: EdgeInsets.symmetric(
-                        vertical: isMobile ? 20 : 40,
-                        horizontal: isMobile ? 10 : 20,
+                        vertical: isMobile ? 10 : 40,
+                        horizontal: isMobile ? 5 : 20,
                       ),
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -260,8 +262,8 @@ class _MySpacePageState extends State<MySpacePage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildLink('View About Page', 'https://github.com/archieBTW'),
-              _buildLink('Browse Our Apps', 'https://github.com/archieBTW'),
+              _buildLink('Browse All Apps', 'https://github.com/archieBTW'),
+              SizedBox(height: 10),
               _buildLink('Send Message', 'mailto:billy@billyrigdon.dev'),
             ],
           ),
@@ -315,27 +317,23 @@ class _MySpacePageState extends State<MySpacePage> {
           crossAxisSpacing: 10,
           childAspectRatio: 0.8,
           children: [
-            _buildFriend(
-              'fyr',
-              Icons.computer,
-              'https://github.com/archieBTW/fyrDE',
-            ),
+            _buildFriend('fyr', Icons.computer, 'https://fyr.software'),
             _buildFriend('archBTW.', Icons.music_note, 'https://archBTW.sh'),
             _buildFriend('bybl', Icons.book, 'https://bybl.dev'),
             _buildFriend(
               'libretrac',
               Icons.favorite,
-              'https://github.com/archieBTW/libretrac',
-            ),
-            _buildFriend(
-              'trustfall',
-              Icons.videogame_asset,
-              'https://github.com/archieBTW/trustfall',
+              'https://libretrac.welledumacated.dev',
             ),
             _buildFriend(
               'olive branch',
               Icons.newspaper,
-              'https://archbtw.site',
+              'https://theolivebranch.press',
+            ),
+            _buildFriend(
+              'beats by arch',
+              Icons.headphones,
+              'https://beatsby.archbtw.sh',
             ),
           ],
         ),
@@ -471,6 +469,7 @@ class MusicPlayerWidget extends StatefulWidget {
 class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
+  bool _isBuffering = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
   int _currentTrackIndex = 0;
@@ -503,9 +502,15 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
   @override
   void initState() {
     super.initState();
+    _audioPlayer.setReleaseMode(ReleaseMode.release);
     _audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
-        setState(() => _isPlaying = state == PlayerState.playing);
+        setState(() {
+          _isPlaying = state == PlayerState.playing;
+          if (state == PlayerState.playing || state == PlayerState.paused) {
+            _isBuffering = false;
+          }
+        });
       }
     });
     _audioPlayer.onDurationChanged.listen((newDuration) {
@@ -529,30 +534,63 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
     if (_isPlaying) {
       await _audioPlayer.pause();
     } else {
-      await _audioPlayer.play(
-        AssetSource(_tracks[_currentTrackIndex]['path']!),
-      );
+      setState(() => _isBuffering = true);
+      final path = _tracks[_currentTrackIndex]['path']!;
+      try {
+        await _audioPlayer.setSource(AssetSource(path));
+        await _audioPlayer.resume();
+      } catch (e) {
+        debugPrint("Audio Error: $e");
+        if (mounted) setState(() => _isBuffering = false);
+      }
     }
   }
 
   Future<void> _stop() async {
     await _audioPlayer.stop();
-    setState(() => _position = Duration.zero);
+    setState(() {
+      _position = Duration.zero;
+      _isBuffering = false;
+    });
   }
 
   Future<void> _nextTrack() async {
+    await _audioPlayer.stop();
+    final nextIndex = (_currentTrackIndex + 1) % _tracks.length;
+    final path = _tracks[nextIndex]['path']!;
+
     setState(() {
-      _currentTrackIndex = (_currentTrackIndex + 1) % _tracks.length;
+      _currentTrackIndex = nextIndex;
+      _isBuffering = true;
     });
-    await _audioPlayer.play(AssetSource(_tracks[_currentTrackIndex]['path']!));
+
+    try {
+      await _audioPlayer.setSource(AssetSource(path));
+      await _audioPlayer.resume();
+    } catch (e) {
+      debugPrint("Audio Error: $e");
+      if (mounted) setState(() => _isBuffering = false);
+    }
   }
 
   Future<void> _prevTrack() async {
+    await _audioPlayer.stop();
+    final prevIndex =
+        (_currentTrackIndex - 1 + _tracks.length) % _tracks.length;
+    final path = _tracks[prevIndex]['path']!;
+
     setState(() {
-      _currentTrackIndex =
-          (_currentTrackIndex - 1 + _tracks.length) % _tracks.length;
+      _currentTrackIndex = prevIndex;
+      _isBuffering = true;
     });
-    await _audioPlayer.play(AssetSource(_tracks[_currentTrackIndex]['path']!));
+
+    try {
+      await _audioPlayer.setSource(AssetSource(path));
+      await _audioPlayer.resume();
+    } catch (e) {
+      debugPrint("Audio Error: $e");
+      if (mounted) setState(() => _isBuffering = false);
+    }
   }
 
   @override
@@ -616,7 +654,17 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
                 children: [
                   _buildSimpleBtn('PREV', _prevTrack),
                   const Text(' | ', style: TextStyle(color: Color(0xFFBF00FF))),
-                  _buildSimpleBtn(_isPlaying ? 'PAUSE' : 'PLAY', _playPause),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      _buildSimpleBtn(
+                        _isBuffering
+                            ? 'LOADING...'
+                            : (_isPlaying ? 'PAUSE' : 'PLAY'),
+                        _playPause,
+                      ),
+                    ],
+                  ),
                   const Text(' | ', style: TextStyle(color: Color(0xFFBF00FF))),
                   _buildSimpleBtn('STOP', _stop),
                   const Text(' | ', style: TextStyle(color: Color(0xFFBF00FF))),
@@ -641,16 +689,32 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
                   itemBuilder: (context, index) {
                     final isCurrent = index == _currentTrackIndex;
                     return InkWell(
-                      onTap: () {
-                        setState(() => _currentTrackIndex = index);
-                        _audioPlayer.play(AssetSource(_tracks[index]['path']!));
+                      onTap: () async {
+                        await _audioPlayer.stop();
+                        final path = _tracks[index]['path']!;
+
+                        setState(() {
+                          _currentTrackIndex = index;
+                          _isBuffering = true;
+                        });
+
+                        try {
+                          await _audioPlayer.setSource(AssetSource(path));
+                          await _audioPlayer.resume();
+                        } catch (e) {
+                          debugPrint("Audio Error: $e");
+                          if (mounted) setState(() => _isBuffering = false);
+                        }
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 8,
+                        ),
                         child: Text(
                           '${index + 1}. ${_tracks[index]['name']!}',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 13,
                             color: isCurrent
                                 ? const Color(0xFFBF00FF)
                                 : Colors.white70,
@@ -674,13 +738,16 @@ class _MusicPlayerWidgetState extends State<MusicPlayerWidget> {
   Widget _buildSimpleBtn(String label, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Color(0xFFBF00FF),
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-          decoration: TextDecoration.underline,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFFBF00FF),
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline,
+          ),
         ),
       ),
     );
