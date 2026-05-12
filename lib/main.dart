@@ -320,11 +320,7 @@ class _MySpacePageState extends State<MySpacePage> {
             _buildFriend('fyr', Icons.computer, 'https://fyr.software'),
             _buildFriend('archBTW.', Icons.music_note, 'https://archBTW.sh'),
             _buildFriend('bybl', Icons.book, 'https://bybl.dev'),
-            _buildFriend(
-              'libretrac',
-              Icons.favorite,
-              'https://libretrac.welledumacated.dev',
-            ),
+            _buildFriend('libretrac', Icons.favorite, 'https://libretrac.site'),
             _buildFriend(
               'olive branch',
               Icons.newspaper,
@@ -334,6 +330,17 @@ class _MySpacePageState extends State<MySpacePage> {
               'beats by arch',
               Icons.headphones,
               'https://beatsby.archbtw.sh',
+            ),
+            _buildFriend('github', Icons.code, 'https://github.com/archieBTW'),
+            _buildFriend(
+              'violet apparition',
+              Icons.album,
+              'https://violetapparition.com',
+            ),
+            _buildFriend(
+              'tiktok',
+              Icons.video_library,
+              'https://tiktok.com/@fyr.archbtw',
             ),
           ],
         ),
