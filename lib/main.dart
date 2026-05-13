@@ -348,6 +348,11 @@ class _MySpacePageState extends State<MySpacePage> {
               Icons.music_video,
               'https://soundcloud.com/archBTW',
             ),
+            _buildFriend(
+              'torrey ramirez design',
+              Icons.brush,
+              'https://torreyramirez.art',
+            ),
           ],
         ),
       ],
