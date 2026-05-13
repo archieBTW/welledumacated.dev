@@ -337,10 +337,16 @@ class _MySpacePageState extends State<MySpacePage> {
               Icons.album,
               'https://violetapparition.com',
             ),
+            _buildFriend('fyrWeb', Icons.web, 'https://web.fyr.software'),
             _buildFriend(
               'tiktok',
               Icons.video_library,
               'https://tiktok.com/@fyr.archbtw',
+            ),
+            _buildFriend(
+              'soundcloud',
+              Icons.music_video,
+              'https://soundcloud.com/archBTW',
             ),
           ],
         ),
@@ -456,7 +462,7 @@ class ParticlePainter extends CustomPainter {
     final paint = Paint()..blendMode = BlendMode.screen;
     for (var p in particles) {
       if (p.life <= 0) continue;
-      // Purple hue
+
       paint.color = HSLColor.fromAHSL(p.life, 280, 1.0, 0.5).toColor();
       canvas.drawCircle(p.pos, (1.0 - (1.0 - p.life)) * 10, paint);
     }
